@@ -7,13 +7,19 @@ const listContactsService = async () => {
   return data;
 }
 
-const getContactByIdService = async (contactId) => {}
+const getContactByIdService = async (id) => {
+  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8')).find(i => i.id === id)
+  return data;
+}
 
-const removeContactService = async (contactId) => {}
+const removeContactService = async (id) => {
+  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8')).filter(i => i.id !== id)
+  return data;
+}
 
 const addContactService = async (body) => {}
 
-const updateContactService = async (contactId, body) => {}
+const updateContactService = async (id, body) => {}
 
 module.exports = {
   listContactsService,

@@ -11,12 +11,20 @@ const listContactsController = async (req,res) => {
     res.json(result);
 }
 
-const getContactByIdController = async (req,res) => {
-  
+const getContactByIdController = async (req,res) => {  
+  const result = await getContactByIdService(req.params.id);
+  if(!result){
+    res.status(404).json('incorrect id')
+  }
+  res.json(result);
 }
 
 const removeContactController = async (req,res) => {
-  
+  const result = await removeContactService(req.params.id);
+  if(!result){
+    res.status(404).json('incorrect id')
+  }
+  res.json(result);
 }
 
 const addContactController = async (req,res) => {
