@@ -1,10 +1,29 @@
 
 
+const listContacts = async (req,res) => {
+  
+}
 
-const getContactController = async (req, res, next) => {
-  res.json({ message: 'template message' })
+const getContactById = async (req,res) => {
+  
+}
+
+const removeContact = async (req,res) => {
+  
+}
+
+const addContact = async (req,res) => {
+  
+}
+
+const updateContact = async (req,res) => {
+  
 }
 
 module.exports = {
-  getContactController
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContact,
 }
