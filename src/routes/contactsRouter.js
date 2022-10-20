@@ -13,9 +13,9 @@ router.get('/', listContactsController);
 
 router.get('/:id', getContactByIdController)
 
-router.post('/', removeContactController)
+router.post('/', addContactController)
 
-router.delete('/:id', addContactController)
+router.delete('/:id', removeContactController)
 
 router.put('/:id', updateContactController)
 
