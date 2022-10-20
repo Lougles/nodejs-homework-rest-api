@@ -6,6 +6,8 @@ const {
   updateContactService
 } = require('../services/contactsService')
 const {v4} = require('uuid')
+const {contactSchema} = require('../utils/contactsValidation')
+
 
 const listContactsController = async (req,res) => {
     const result = await listContactsService();
@@ -23,17 +25,10 @@ const removeContactController = async (req,res) => {
 }
 
 const addContactController = async (req,res) => {
-  const user = {
-    id: v4(),
-    name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone
-  }
-  const result = await addContactService(user)
-  // if(!result){
-  //   res.status(404).json('incorrect data')
-  // }
-  res.status(201).json(result);
+    const {name, email, phone} = req.body;
+    const user = { id: v4(), name, email, phone }
+    const result = await addContactService(user)
+    res.status(201).json(result);
 }
 
 const updateContactController = async (req,res) => {

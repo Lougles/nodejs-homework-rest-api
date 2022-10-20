@@ -34,12 +34,18 @@ const removeContactService = async (id) => {
 }
 
 const addContactService = async (body) => {
-  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8'));
-  const newData = [...data, body];
-  await fs.writeFile(contactsPath ,JSON.stringify(newData));
-  return listContactsService();
-}
+  try {
+    
+    const data = JSON.parse( await fs.readFile(contactsPath, 'utf8'));
+    const newData = [...data, body];
+    await fs.writeFile(contactsPath ,JSON.stringify(newData));
+    return listContactsService();
 
+  } catch (e) {
+    return e.message
+  }
+
+}
 
 const updateContactService = async (id, body) => {
 
