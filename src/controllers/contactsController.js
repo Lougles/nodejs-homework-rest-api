@@ -6,7 +6,6 @@ const {
   updateContactService
 } = require('../services/contactsService')
 const {v4} = require('uuid')
-const {contactSchema} = require('../utils/contactsValidation')
 
 
 const listContactsController = async (req,res) => {
