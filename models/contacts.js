@@ -1,6 +1,7 @@
 const fs = require('fs/promises')
 const path = require('path')
-const contactsPath = path.resolve('models', 'contacts.json')
+const contactsPath = path.resolve('models', 'contacts.json');
+const {v4} = require('uuid')
 
 const listContacts = async () => {
   return data = JSON.parse( await fs.readFile(contactsPath, 'utf8'));
@@ -14,9 +15,16 @@ const getContactById = async (id) => {
   return {status: 404, message: {"message" : "Not found"}}
 }
 
+const addContact = async (body) => {
+  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8'));
+  const newContact = {id: v4(), ...body}
+  data.push(newContact);
+  await fs.writeFile(contactsPath, JSON.stringify(data))
+  return {status: 201, message: newContact}
+}
+
 const removeContact = async (contactId) => {}
 
-const addContact = async (body) => {}
 
 const updateContact = async (contactId, body) => {}
 

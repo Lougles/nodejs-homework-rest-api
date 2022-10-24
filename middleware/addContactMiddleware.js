@@ -2,7 +2,7 @@ const {contactShema} = require('../validation/schema');
 
 
 const addContactM = (req, res, next) => {
-  const validation = contactShema(req.body);
+  const validation = contactShema.validate(req.body);
   if(validation.error){
     next(validation.error)
   }
