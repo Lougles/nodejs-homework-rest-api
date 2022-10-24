@@ -9,7 +9,7 @@ const {
 } = require('../../models/contacts');
 
 router.get('/', async (req, res, next) => {
-  res.json({ message: await listContacts() })
+  res.json(await listContacts())
 })
 
 router.get('/:contactId', async (req, res, next) => {
