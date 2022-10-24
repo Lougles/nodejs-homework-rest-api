@@ -9,27 +9,28 @@ const {
 } = require('../../models/contacts');
 const {addContactM} = require('../../middleware/addContactMiddleware')
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
   res.json(await listContacts())
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req, res) => {
   const {status, message} = await getContactById(req.params.id)
   res.status(status).json(message)
 })
 
-router.post('/', addContactM, async (req, res, next) => {
+router.post('/', addContactM, async (req, res) => {
   const {status, message} = await addContact(req.body)
   res.status(status).json(message);
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', async (req, res) => {
   const {status, message} = await removeContact(req.params.id)
   res.status(status).json(message);
 })
 
-router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+router.put('/:id', addContactM, async (req, res) => {
+  const {status, message} = await updateContact(req.params.id, req.body);
+  res.status(status).json(message);
 })
 
 module.exports = router
