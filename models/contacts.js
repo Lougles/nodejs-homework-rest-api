@@ -23,10 +23,18 @@ const addContact = async (body) => {
   return {status: 201, message: newContact}
 }
 
-const removeContact = async (contactId) => {}
+const removeContact = async (id) => {
+  const {message} = await getContactById(id);
+  if (message.id === id){
+    const data = JSON.parse( await fs.readFile(contactsPath, 'utf8')).filter(i => i.id !== id);
+    await fs.writeFile(contactsPath, JSON.stringify(data));
+    return {status: 200, message: {"message": "contact deleted"}}
+  }
+  return {status: 404, message: {"message": "Not found"}}
+}
 
 
-const updateContact = async (contactId, body) => {}
+const updateContact = async (id, body) => {}
 
 module.exports = {
   listContacts,

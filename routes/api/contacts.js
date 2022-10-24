@@ -23,8 +23,9 @@ router.post('/', addContactM, async (req, res, next) => {
   res.status(status).json(message);
 })
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
+router.delete('/:id', async (req, res, next) => {
+  const {status, message} = await removeContact(req.params.id)
+  res.status(status).json(message);
 })
 
 router.put('/:contactId', async (req, res, next) => {
