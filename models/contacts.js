@@ -39,8 +39,8 @@ const updateContact = async (id, body) => {
   if(message.id === id){
     const data = JSON.parse( await fs.readFile(contactsPath, 'utf8')).map(i => i.id === id ? Object.assign(i, body) : i);
     await fs.writeFile(contactsPath, JSON.stringify(data));
-    const sendContact = await getContactById(id)
-    return {status: 200, message: sendContact }
+    const getById = await getContactById(id);
+    return {status: 200, message: getById.message }
   }
   return {status: 404, message: {"message": "Not found"}}
 }
