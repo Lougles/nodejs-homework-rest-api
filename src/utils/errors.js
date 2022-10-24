@@ -10,7 +10,6 @@ class validationError extends MyError {
     this.status = 400;
   }
 }
-
 module.exports = {
   MyError,
   validationError

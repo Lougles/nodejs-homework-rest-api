@@ -7,16 +7,16 @@ const {
   addContactController,
   updateContactController
 } = require ('../controllers/contactsController');
-
+const {addContactValidationMiddleware} = require('../middleware/validationMiddleware')
 
 router.get('/', listContactsController);
 
 router.get('/:id', getContactByIdController)
 
-router.post('/', addContactController)
+router.post('/', addContactValidationMiddleware, addContactController)
 
 router.delete('/:id', removeContactController)
 
-router.put('/:id', updateContactController)
+router.put('/:id', addContactValidationMiddleware, updateContactController)
 
 module.exports = router
