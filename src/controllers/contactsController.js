@@ -33,7 +33,7 @@ const removeContactController = async (req,res) => {
 
 const addContactController = async (req,res) => {
       const {name, email, phone} = req.body;
-      const user = { id: v4(), name, email, phone }
+      const user = { name, email, phone }
       const {status, message} = await addContactService(user)
       res.status(status).json(message);
 }

@@ -1,10 +1,10 @@
 const fs = require('fs/promises');
-const path = require('path')
+const path = require('path');
+const { Contact } = require('../db/contactsDB');
 const contactsPath = path.resolve('models', 'contacts.json')
 
-
 const listContactsService = async () => {
-  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8'));
+  const data = await Contact.find({});
   return data;
 }
 
@@ -27,10 +27,8 @@ const removeContactService = async (id) => {
 }
 
 const addContactService = async (body) => {
-  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8'))
-  const newData = [...data, body];
-  await fs.writeFile(contactsPath ,JSON.stringify(newData));
-  return {status: 201, message: newData};
+  const data = await Contact.create({...body})
+  return {status: 201, message: data};
 }
 
 const updateContactService = async (id, body) => {
