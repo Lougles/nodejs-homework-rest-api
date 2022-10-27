@@ -1,4 +1,3 @@
-const fs = require('fs/promises');
 const { Contact } = require('../db/contactsDB');
 
 const listContactsService = async () => {
@@ -12,12 +11,8 @@ const getContactByIdService = async (id) => {
 }
 
 const removeContactService = async (id) => {
-  const {message} = await getContactByIdService(id)
-  if(message.id === id){
-    await Contact.findByIdAndRemove(id)
-    return {status: 200, message: {"message": "contact deleted"}}
-  }
-  return {status: 400, message: "Not Found"}
+  await Contact.findByIdAndRemove(id)
+  return {status: 200, message: {"message": "contact deleted"}}
 }
 
 const addContactService = async (body) => {
@@ -26,22 +21,13 @@ const addContactService = async (body) => {
 }
 
 const updateContactService = async (id, body) => {
-  let {message} = await getContactByIdService(id);
-  if(message.id === id){
-    await Contact.findByIdAndUpdate(id, {...body})
-    const data = await getContactByIdService(id)
-    return {status: 200, message: data.message}
-  }
-  return {status: 400, message: {"message": "Not found"}}
+  const data = await Contact.findByIdAndUpdate(id, {...body})
+  return {status: 200, message: data}
 }
 
  const updateFavoriteService = async (id, favorite) => {
-  let {message} = await getContactByIdService(id);
-  if(message.id === id) {
-    await Contact.findByIdAndUpdate(id, {$set: {favorite}})
-    const data = await getContactByIdService(id)
-    return {status: 200, message: data.message}
-  }
+  const data = await Contact.findByIdAndUpdate(id, {$set: {favorite}})
+  return {status: 200, message: data}
  }
 
 module.exports = {
