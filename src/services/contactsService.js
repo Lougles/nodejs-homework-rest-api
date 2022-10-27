@@ -1,5 +1,4 @@
 const { Contact } = require('../db/contactsDB');
-var mongoose = require('mongoose');
 
 const listContactsService = async () => {
   const data = await Contact.find();
@@ -12,14 +11,10 @@ const getContactByIdService = async (id) => {
 }
 
 const removeContactService = async (id) => {
-  if(!id){
-    return {status: 400, message: {"message": "Enter user id!"}}
-  }
-  if(!await getContactByIdService(id)){
-    return {status: 404, message: {"message": "Not found!"}}
-  }
-  await Contact.findByIdAndRemove(id)
-  return {status: 200, message: {"message": "contact deleted"}}
+  const {message} = await getContactByIdService(id);
+  if(!message.id) return {status: 404, message: {"message": "Not found"}}
+  const data = await Contact.findByIdAndRemove(id)
+  return {status: 200, message: {"message": "contact deleted", data}}
 }
 
 const addContactService = async (body) => {
