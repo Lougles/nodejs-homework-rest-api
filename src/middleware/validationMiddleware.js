@@ -1,5 +1,5 @@
 const {validationError} = require('../utils/errors');
-const {contactSchema} = require('../utils/schemaValidation')
+const {contactSchema, favoriteSchema} = require('../utils/schemaValidation')
 
 
 
@@ -11,6 +11,11 @@ const addContactValidationMiddleware = (req, res, next) => {
   next()
 }
 
+const updateFavoriteValidationMiddleware = (req, res, next) => {
+  const result = favoriteSchema.validate(req.body);
+  result.error ? next(new validationError(result.error)) : next()
+}
 module.exports = {
-  addContactValidationMiddleware
+  addContactValidationMiddleware,
+  updateFavoriteValidationMiddleware
 }
