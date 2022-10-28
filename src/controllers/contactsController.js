@@ -9,8 +9,12 @@ const {
 
 
 const listContactsController = async (req,res) => {
-  const result = await listContactsService();
-  res.json(result);
+  try {
+    const result = await listContactsService();
+    res.json(result);
+  } catch (e) {
+    res.status(400).json(e.message);
+  }
 }
 
 const getContactByIdController = async (req,res) => {  
@@ -32,9 +36,7 @@ const removeContactController = async (req,res) => {
 }
 
 const addContactController = async (req,res) => {
-  const {name, email, phone} = req.body;
-  const user = { name, email, phone }
-  const {status, message} = await addContactService(user)
+  const {status, message} = await addContactService(req.body)
   res.status(status).json(message);
 }
 

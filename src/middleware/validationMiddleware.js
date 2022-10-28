@@ -6,7 +6,7 @@ const {contactSchema, favoriteSchema} = require('../utils/schemaValidation')
 const addContactValidationMiddleware = (req, res, next) => {
   const result = contactSchema.validate(req.body);
   if(result.error){
-    next(new validationError(result.error))
+    next(result.error)
   }
   next()
 }
