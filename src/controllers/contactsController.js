@@ -7,7 +7,6 @@ const {
   updateFavoriteService
 } = require('../services/contactsService')
 
-
 const listContactsController = async (req,res) => {
     const result = await listContactsService();
     res.json(result);
