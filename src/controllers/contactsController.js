@@ -9,30 +9,18 @@ const {
 
 
 const listContactsController = async (req,res) => {
-  try {
     const result = await listContactsService();
     res.json(result);
-  } catch (e) {
-    res.status(400).json(e.message);
-  }
 }
 
 const getContactByIdController = async (req,res) => {  
-  try {
     const {status, message} = await getContactByIdService(req.params.id);
     res.status(status).json(message);
-  } catch (e) {
-    res.json(e.message)
-  }
 }
 
 const removeContactController = async (req,res) => {
-  try {
     const {status, message} = await removeContactService(req.params.id);
     res.status(status).json(message);
-  } catch (e) {
-    res.json(e.message)
-  }
 }
 
 const addContactController = async (req,res) => {
@@ -41,10 +29,8 @@ const addContactController = async (req,res) => {
 }
 
 const updateContactController = async (req,res) => {
-  const {name, email, phone} = req.body;
-  const user = {name, email, phone};
-  const {status, message} = await updateContactService(req.params.id, user)
-  res.status(status).json(message);
+    const {status, message} = await updateContactService(req.params.id, req.body)
+    res.status(status).json(message);
 }
 
 const updateFavoriteController = async (req, res) => {
