@@ -5,18 +5,27 @@ const {
   getContactByIdController,
   removeContactController,
   addContactController,
-  updateContactController
+  updateContactController,
+  updateFavoriteController
 } = require ('../controllers/contactsController');
-const {addContactValidationMiddleware} = require('../middleware/validationMiddleware')
+const {
+  addContactValidationMiddleware, 
+  updateFavoriteValidationMiddleware
+} = require('../middleware/validationMiddleware')
+const {
+  tryCatch
+} = require('../utils/tryCatch')
 
-router.get('/', listContactsController);
+router.get('/', tryCatch(listContactsController));
 
-router.get('/:id', getContactByIdController)
+router.get('/:id', tryCatch(getContactByIdController))
 
-router.post('/', addContactValidationMiddleware, addContactController)
+router.post('/', addContactValidationMiddleware, tryCatch(addContactController))
 
-router.delete('/:id', removeContactController)
+router.delete('/:id', tryCatch(removeContactController))
 
-router.put('/:id', addContactValidationMiddleware, updateContactController)
+router.put('/:id', addContactValidationMiddleware, tryCatch(updateContactController))
+
+router.patch('/favorite/:id', updateFavoriteValidationMiddleware, tryCatch(updateFavoriteController))
 
 module.exports = router

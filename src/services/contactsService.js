@@ -1,47 +1,64 @@
-const fs = require('fs/promises');
-const path = require('path')
-const contactsPath = path.resolve('models', 'contacts.json')
-
+const { Contact } = require('../db/contactsDB');
 
 const listContactsService = async () => {
-  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8'));
-  return data;
+  try{
+    const data = await Contact.find();
+    return data;
+  } catch (e) {
+    return {status: 400, message: {"message": e.message}}
+  }
 }
 
 const getContactByIdService = async (id) => {
-  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8')).find(i => i.id === id);
-  if(!data){
-    return {status: 404, message: {"message": "Not found"}}
+  try{
+    const data = await Contact.findById(id)
+    return !data ? {status: 404, message: {"message": "Not found"}} : {status: 200, message: data}
+  } catch (e) {
+    return {status: 400, message: {"message": e.message}}
   }
-  return {status: 200, message: data}
 }
 
 const removeContactService = async (id) => {
-  const {message} = await getContactByIdService(id)
-  if(!message.id){
-    return {status: 400, message: "Not Found"}
+  try{
+    const {message} = await getContactByIdService(id);
+    if(!message.id) return {status: 404, message: {"message": "Not found"}}
+    const data = await Contact.findByIdAndRemove(id)
+    return {status: 200, message: {"message": "contact deleted", data}}
+  } catch (e) {
+    return {status: 400, message: {"message": e.message}}
   }
-  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8')).filter(i => i.id !== id);
-  await fs.writeFile(contactsPath, JSON.stringify(data));
-  return {status: 200, message: {"message": "contact deleted"}}
 }
 
 const addContactService = async (body) => {
-  const data = JSON.parse( await fs.readFile(contactsPath, 'utf8'))
-  const newData = [...data, body];
-  await fs.writeFile(contactsPath ,JSON.stringify(newData));
-  return {status: 201, message: newData};
+  try{
+    const data = await Contact.create({...body})
+    return {status: 201, message: data};
+  } catch (e) {
+    return {status: 400, message: {"message": e.message}}
+  }
 }
 
 const updateContactService = async (id, body) => {
-  let {message} = await getContactByIdService(id);
-  if(message.id === id){
-    const data = JSON.parse( await fs.readFile(contactsPath, 'utf8')).map(i => i.id === id ? Object.assign(i, body) : i);
-    await fs.writeFile(contactsPath ,JSON.stringify(data));
+  try {
+    const {message} = await getContactByIdService(id);
+    if(!message.id) return {status: 404, message: {"message": "Not found"}}
+    const data = await Contact.findByIdAndUpdate(id, {...body}, {returnDocument: 'after'})
     return {status: 200, message: data}
+  } catch (e) {
+    return {status: 400, message: {"message": e.message}}
   }
-  return {status: 400, message: {"message": "Not found"}}
 }
+
+ const updateFavoriteService = async (id, favorite) => {
+   try{
+    const {message} = await getContactByIdService(id);
+    if(!message.id) return {status: 404, message: {"message": "Not found"}}
+    const data = await Contact.findByIdAndUpdate(id, {$set: {favorite}}, {returnDocument: 'after'})
+    return {status: 200, message: data};
+  } catch (e) {
+    return {status: 400, message: {"message": e.message}}
+  }
+ }
 
 module.exports = {
   listContactsService,
@@ -49,4 +66,5 @@ module.exports = {
   removeContactService,
   addContactService,
   updateContactService,
+  updateFavoriteService
 }
