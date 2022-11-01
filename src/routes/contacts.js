@@ -11,15 +11,10 @@ const {
 } = require('../controllers/contactController')
 
 router.get('/', getAllContactsController)
-
 router.get('/:id', getByIdContactController)
-
 router.post('/', addContactMiddleware, addContactController)
-
 router.delete('/:id', removeContactController)
-
 router.put('/:id', addContactMiddleware, updateContactController)
-
 router.patch('/favorite/:id', favoriteMiddleware, updateFavoriteFieldController)
 
 module.exports = router
