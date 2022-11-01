@@ -18,7 +18,6 @@ const Contact = mongoose.Schema({
   },
 })
 
-
 const ContactModel = mongoose.model('Contact', Contact)
 
 

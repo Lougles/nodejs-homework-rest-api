@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 require('dotenv').config()
-const URL = process.env.URL;
 const db = '/db-contacts'
+const URL = process.env.URL + db;
 
 
 const connection = async() => {
-  return mongoose.connect(URL+db, {
+  return mongoose.connect(URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

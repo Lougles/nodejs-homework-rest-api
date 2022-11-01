@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const {addContactMiddleware, favoriteMiddleware} = require('../middleware/contactMiddleware')
 const {
   getAllContactsController,
   getByIdContactController,
@@ -13,12 +14,12 @@ router.get('/', getAllContactsController)
 
 router.get('/:id', getByIdContactController)
 
-router.post('/', addContactController)
+router.post('/', addContactMiddleware, addContactController)
 
 router.delete('/:id', removeContactController)
 
-router.put('/:id', updateContactController)
+router.put('/:id', addContactMiddleware, updateContactController)
 
-router.patch('/favorite/:id', updateFavoriteFieldController)
+router.patch('/favorite/:id', favoriteMiddleware, updateFavoriteFieldController)
 
 module.exports = router
