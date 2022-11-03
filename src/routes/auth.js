@@ -11,6 +11,6 @@ const {
 } = require('../controllers/userController')
 
 router.post('/register', registrationMiddleware, registrationController)
-router.get('/login', loginController)
+router.get('/login', registrationMiddleware, loginController)
 
 module.exports = router;

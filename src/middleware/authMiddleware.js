@@ -5,14 +5,13 @@ const {validateRegistration} = require('../helpers/joiUserValidation')
 const authMiddleware = async(req, res, next) => {
   try {
     const {authorization} = req.headers;
-    if(!authorization) next(Error('There is no token here'))
+    if(!authorization) return res.status(401).json({message: 'Unauthorized'})
     const [, token] = req.headers.authorization?.split(' ');
-    if(!token) next(Error('There is no token here'))
+    if(!token) return res.status(401).json({message: 'Unauthorized'})
     const user = jwt.decode(token, process.env.JWT)
+    if(!user) return res.status(404).json('User not found')
     const findUser = await UserModel.findById(user._id);
-    if(!findUser) next(Error('User not found'));
-    if(findUser.token !== token) next(Error('Invalid user token!'));
-    req.token = token;
+    if(findUser.token !== token) return res.status(404).json({message: `User not found`})
     req.user = findUser;
     next();
   } catch (err) {

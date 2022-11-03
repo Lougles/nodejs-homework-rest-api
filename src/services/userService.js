@@ -3,9 +3,10 @@ require('dotenv').config()
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-
 const registration = async(email, password) => {
   try {
+    const check = await UserModel.findOne({email});
+    if(check) return {status: 400, message: {"message": "Email in use"}}
     const user = new UserModel({email, password});
     await user.save();
     return {status: 201, message: {"message": "Registration is successful", user}}
@@ -18,7 +19,7 @@ const login = async(email, password) => {
   try {
     const user = await UserModel.findOne({email})
     if(!user) return {status: 404, message: {"message": `${email} not found!`}}
-    if(!await bcrypt.compare(password, user.password)) return {status: 400, message: {"message": `Wrong password`}}
+    if(!await bcrypt.compare(password, user.password)) return {status: 401, message: {"message": `Wrong password`}}
     const token = jwt.sign({
       _id: user._id,
       createdAt: user.createdAt,
