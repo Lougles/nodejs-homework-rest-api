@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 
 const User = mongoose.Schema({
@@ -16,10 +17,23 @@ const User = mongoose.Schema({
     enum: ["starter", "pro", "business"],
     default: "starter"
   },
-  token: String
+  createdAt: {
+    type: Date,
+    default: Date.now()
+  },
+  token: {
+    type: String
+  }
 })
 
-const UserModel = mongoose.model('User', User);
+User.pre('save', async function() {
+  if(this.isNew){
+    this.password = await bcrypt.hash(this.password, 10)
+  }
+})
+
+const UserModel = mongoose.model('Users', User);
+
 
 module.exports = {
   UserModel
