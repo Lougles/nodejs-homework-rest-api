@@ -8,11 +8,13 @@ const {
 const {
   registrationController,
   loginController,
-  logoutController
+  logoutController,
+  currentController
 } = require('../controllers/userController')
 
 router.post('/register', registrationMiddleware, registrationController)
 router.get('/login', registrationMiddleware, loginController)
 router.post('/logout', authMiddleware, logoutController)
+router.get('/current', authMiddleware, currentController)
 
 module.exports = router;
