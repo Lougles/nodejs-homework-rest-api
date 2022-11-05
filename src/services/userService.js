@@ -32,8 +32,17 @@ const login = async(email, password) => {
   }
 }
 
+const logout = async(token) => {
+  try {
+    token = '';
+    return {status: 200, message: {"message": "Logout Success", token}}
+  } catch (err) {
+    return {status: 400, message: {"message": err.message}}
+  }
+}
 
 module.exports = {
   registration,
-  login
+  login,
+  logout
 }
