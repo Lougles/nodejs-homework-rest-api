@@ -8,8 +8,8 @@ const {
 } = require('../services/contactService')
 
 const getAllContactsController = async (req, res, next) => {
-  const page = parseInt(req.query.page)
-  const {status, message} = await getAllContactsService(req.user._id, page);
+  const {page, favorite} = req.query
+  const {status, message} = await getAllContactsService(req.user._id, parseInt(page), favorite);
   res.status(status).json(message);
 }
 

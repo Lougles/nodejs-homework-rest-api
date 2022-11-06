@@ -1,11 +1,13 @@
 const {ContactModel} = require('../models/contactModel')
 
-const getAllContactsService = async(owner, page) => {
+const getAllContactsService = async(owner, page, favorite) => {
   try {
-    if(!page) page = 1;
-    const limit = 5;
-    const skip = parseInt(page - 1) * parseInt(limit);
-    return {status: 200, message: await ContactModel.find({owner}).skip(skip).limit(limit) }
+    console.log(page, favorite)
+    if(!page) page = 1
+    const limit = 5
+    const skip = parseInt(page - 1) * parseInt(limit)
+    if(!favorite) return {status: 200, message: await ContactModel.find({owner}).skip(skip).limit(limit) }
+    return {status: 200, message: await ContactModel.find({owner, favorite}).skip(skip).limit(limit) }
   } catch (e) {
     return {status: 400, message: {"message": e.message}}
   }
