@@ -26,7 +26,7 @@ const Auth = mongoose.Schema({
   }
 })
 
-authSchema.pre('save', async function() {
+Auth.pre('save', async function() {
   if (this.isNew){
     this.password =  await bcrypt.hash(this.password, 10);
   }
