@@ -38,8 +38,17 @@ const logout = async (user) => {
   }
 }
 
+const current = async (user) => {
+  try {
+    return {status: 200, message: {"email": user.email, "subscription": user.subscription}}
+  } catch (err) {
+    return {status: 400, message: err.message}
+  }
+}
+
 module.exports = {
   registration,
   login,
-  logout
+  logout,
+  current
 }
