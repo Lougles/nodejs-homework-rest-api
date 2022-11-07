@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
-const registration = async(email, password) => {
+const registrationService = async(email, password) => {
   try {
     return {status: 200, message: await new User({email, password}).save() }
   } catch (err) {
@@ -11,7 +11,7 @@ const registration = async(email, password) => {
   }
 }
 
-const login = async(email, password) => {
+const loginService = async(email, password) => {
   try {
     const user = await User.findOne({email});
     if(!user) return {status: 404, message: `User is not found`}
@@ -28,7 +28,7 @@ const login = async(email, password) => {
   }
 }
 
-const logout = async (user) => {
+const logoutService = async (user) => {
   try {
     user.token = ''
     await user.save();
@@ -38,7 +38,7 @@ const logout = async (user) => {
   }
 }
 
-const current = async (user) => {
+const currentService = async (user) => {
   try {
     return {status: 200, message: {"email": user.email, "subscription": user.subscription}}
   } catch (err) {
@@ -47,8 +47,8 @@ const current = async (user) => {
 }
 
 module.exports = {
-  registration,
-  login,
-  logout,
-  current
+  registrationService,
+  loginService,
+  logoutService,
+  currentService
 }
