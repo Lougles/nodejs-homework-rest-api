@@ -27,11 +27,11 @@ const addContactService = async(body, owner) => {
   }
 }
 
-const removeContactService = async(id, owner) => {
+const removeContactService = async(_id, owner) => {
   try {
-    const {message} = await getByIdContactService(id);
+    const {message} = await getByIdContactService(_id, owner);
     if(!message.id) return {status: 404, message: {"message": "Not found"}}
-    const data = await ContactModel.findByIdAndRemove(id, {returnDocument: 'before'});
+    const data = await ContactModel.findByIdAndRemove({_id, owner}, {returnDocument: 'before'});
     return {status: 200, message: {message: `Contact ${message.name} has been removed`, data}}
   } catch (e) {
     return {status: 400, message: {"message": e.message}}
