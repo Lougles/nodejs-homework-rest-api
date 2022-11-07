@@ -70,5 +70,5 @@ module.exports = {
   addContactService,
   removeContactService,
   updateContactService,
-  updateFavoriteFieldService
+  updateFavoriteFieldService,
 }

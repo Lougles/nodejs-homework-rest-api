@@ -43,5 +43,5 @@ module.exports = {
   addContactController,
   removeContactController,
   updateContactController,
-  updateFavoriteFieldController
+  updateFavoriteFieldController,
 }

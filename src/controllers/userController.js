@@ -2,7 +2,8 @@ const {
   registrationService,
   loginService,
   logoutService,
-  currentService
+  currentService,
+  updateSubscriptionService
 } = require('../services/userService')
 
 const registrationController = async(req, res ) => {
@@ -25,9 +26,15 @@ const currentController = async(req, res) => {
   res.status(status).json(message);
 }
 
+const updateSubscriptionController = async (req, res, next) => {
+  const {status, message} = await updateSubscriptionService(req.body.subscription, req.user);
+  res.status(status).json(message);
+}
+
 module.exports = {
   registrationController,
   loginController,
   logoutController,
-  currentController
+  currentController,
+  updateSubscriptionController
 }

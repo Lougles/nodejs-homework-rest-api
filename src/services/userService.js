@@ -46,9 +46,20 @@ const currentService = async (user) => {
   }
 }
 
+const updateSubscriptionService = async(subscription, user) => {
+  try {
+    user.subscription = subscription;
+    await user.save();
+    return {status: 200, message: {email: user.email, subscription: user.subscription}}
+  } catch (e) {
+    return {status: 400, message: {"message": e.message}}
+  }
+}
+
 module.exports = {
   registrationService,
   loginService,
   logoutService,
-  currentService
+  currentService,
+  updateSubscriptionService
 }
