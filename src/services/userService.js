@@ -28,7 +28,18 @@ const login = async(email, password) => {
   }
 }
 
+const logout = async (user) => {
+  try {
+    user.token = ''
+    await user.save();
+    return {status: 204, message: 'No content'}
+  } catch (err) {
+    return {status: 400, message: err.message}
+  }
+}
+
 module.exports = {
   registration,
-  login
+  login,
+  logout
 }
