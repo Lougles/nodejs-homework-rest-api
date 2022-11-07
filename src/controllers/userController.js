@@ -1,7 +1,7 @@
 const {
   registration,
   login
-} = require('../')
+} = require('../services/userService')
 
 
 const registrationController = async(req, res ) => {
