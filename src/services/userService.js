@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
-
 const registration = async(email, password) => {
   try {
     return {status: 200, message: await new User({email, password}).save() }

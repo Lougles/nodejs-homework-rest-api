@@ -1,8 +1,8 @@
 const {ContactModel} = require('../models/contactModel')
 
-const getAllContactsService = async() => {
+const getAllContactsService = async(owner) => {
   try {
-    return {status: 200, message: await ContactModel.find() }
+    return {status: 200, message: await ContactModel.find({owner}) }
   } catch (e) {
     return {status: 400, message: {"message": e.message}}
   }

@@ -8,12 +8,12 @@ const {
 } = require('../services/contactService')
 
 const getAllContactsController = async (req, res, next) => {
-  const {status, message} = await getAllContactsService();
+  const {status, message} = await getAllContactsService(req.query._id);
   res.status(status).json(message);
 }
 
 const getByIdContactController = async (req, res, next) => {
-  const {status, message} = await getByIdContactService(req.params.id);
+  const {status, message} = await getByIdContactService(req.params.id, req.query._id);
   res.status(status).json(message);
 }
 
