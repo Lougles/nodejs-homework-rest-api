@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const {addContactMiddleware, favoriteMiddleware} = require('../middleware/contactMiddleware')
+const {addContactMiddleware, favoriteMiddleware, subscriptionMiddleware} = require('../middleware/contactMiddleware')
+const {authMiddleware} = require('../middleware/authMiddleware')
 const {
   getAllContactsController,
   getByIdContactController,
@@ -10,6 +11,7 @@ const {
   updateFavoriteFieldController
 } = require('../controllers/contactController')
 
+router.use(authMiddleware)
 router.get('/', getAllContactsController)
 router.get('/:id', getByIdContactController)
 router.post('/', addContactMiddleware, addContactController)

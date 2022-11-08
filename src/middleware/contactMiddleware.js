@@ -14,5 +14,5 @@ const favoriteMiddleware = (req, res, next) => {
 
 module.exports = {
   addContactMiddleware,
-  favoriteMiddleware
+  favoriteMiddleware,
 }
