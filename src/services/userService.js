@@ -58,6 +58,7 @@ const updateSubscriptionService = async(subscription, user) => {
 
 const updateAvatarService = async(avatar, user) => {
   try {
+    // if(avatar.filename === 'error') return {status: 400, message: {message: "Avatar must have "}}
     user.avatarURL = avatar.path;
     await user.save();
     return {status: 200, message: {'avatarURL': user.avatarURL}}

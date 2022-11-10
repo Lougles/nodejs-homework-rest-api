@@ -1,5 +1,4 @@
 const {authValidation, subscriptionContact} = require('../helpers/joiUserValidation');
-const {User} = require('../models/userModel')
 
 const authFieldValidation = (req, res, next) => {
   const result = authValidation.validate(req.body)
@@ -15,5 +14,5 @@ const subscriptionMiddleware = (req, res, next) => {
 
 module.exports = {
   authFieldValidation,
-  subscriptionMiddleware,
+  subscriptionMiddleware
 }
