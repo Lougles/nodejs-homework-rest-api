@@ -56,10 +56,21 @@ const updateSubscriptionService = async(subscription, user) => {
   }
 }
 
+const updateAvatarService = async(avatar, user) => {
+  try {
+    user.avatarURL = avatar.path;
+    await user.save();
+    return {status: 200, message: {'avatarURL': user.avatarURL}}
+  } catch (err) {
+    return {status: 400, message: {"message": err.message}}
+  }
+}
+
 module.exports = {
   registrationService,
   loginService,
   logoutService,
   currentService,
-  updateSubscriptionService
+  updateSubscriptionService,
+  updateAvatarService
 }

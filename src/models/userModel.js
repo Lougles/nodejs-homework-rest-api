@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt');
+const gravatar = require('gravatar');
 
 
 const Auth = mongoose.Schema({
@@ -23,7 +24,11 @@ const Auth = mongoose.Schema({
   },
   token: {
     type: String,
-  }
+  },
+  avatarURL: {
+    type: String,
+    default: gravatar.profile_url(this.email)
+  },
 })
 
 Auth.pre('save', async function() {
