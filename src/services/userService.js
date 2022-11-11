@@ -2,6 +2,23 @@ const {User} = require('../models/userModel')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const path = require('path')
+const publicPath = path.resolve('public')
+const uploadsPath = path.resolve('uploads')
+var Jimp = require('jimp');
+const fs = require('fs');
+
+
+async function resize(avatarPath, avatarName, id) {
+  const dir = (`${publicPath}/${id}`)
+  const fullPath = `${dir}/${avatarName}`
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir)
+  const image = await Jimp.read(avatarPath);
+  await image.resize(150, 150);
+  await image.writeAsync(fullPath);
+  fs.unlinkSync(`${uploadsPath}/${avatarName}`)
+  return fullPath
+}
 
 const registrationService = async(email, password) => {
   try {
@@ -58,8 +75,8 @@ const updateSubscriptionService = async(subscription, user) => {
 
 const updateAvatarService = async(avatar, user) => {
   try {
-    // if(avatar.filename === 'error') return {status: 400, message: {message: "Avatar must have "}}
-    user.avatarURL = avatar.path;
+    const resizeAvatar = await resize(avatar.path, avatar.filename, user._id)
+    user.avatarURL = resizeAvatar
     await user.save();
     return {status: 200, message: {'avatarURL': user.avatarURL}}
   } catch (err) {
