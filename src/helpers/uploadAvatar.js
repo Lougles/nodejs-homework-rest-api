@@ -4,7 +4,7 @@ const direct = path.resolve('uploads')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const filetypes = ['image/jpeg', '/image/jpg', 'image/png'];
+    const filetypes = ['image/jpeg', 'image/jpg', 'image/png'];
     const error = filetypes.includes(file.mimetype) ? null : new Error ('Incorrect extension')
     cb(error, direct)
   },
