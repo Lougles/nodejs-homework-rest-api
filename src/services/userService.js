@@ -2,23 +2,7 @@ const {User} = require('../models/userModel')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
-const path = require('path')
-const publicPath = path.resolve('public')
-const uploadsPath = path.resolve('uploads')
-var Jimp = require('jimp');
-const fs = require('fs');
-
-
-async function resize(avatarPath, avatarName, id) {
-  const dir = (`${publicPath}/${id}`)
-  const fullPath = `${dir}/${avatarName}`
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir)
-  const image = await Jimp.read(avatarPath);
-  await image.resize(150, 150);
-  await image.writeAsync(fullPath);
-  fs.unlinkSync(`${uploadsPath}/${avatarName}`)
-  return fullPath
-}
+const {resize} = require('../helpers/resizeAvatar')
 
 const registrationService = async(email, password) => {
   try {
@@ -75,10 +59,11 @@ const updateSubscriptionService = async(subscription, user) => {
 
 const updateAvatarService = async(avatar, user) => {
   try {
-    const resizeAvatar = await resize(avatar.path, avatar.filename, user._id)
+    if(!avatar) return {status: 400, message: {"message": "You didn't choose an avatar"}}
+    const resizeAvatar = await resize(avatar.path, avatar.filename, user)
     user.avatarURL = resizeAvatar
     await user.save();
-    return {status: 200, message: {'avatarURL': user.avatarURL}}
+    return {status: 200, message: {"message": `Avatar of ${user.email} has been changed!`,'avatarURL': user.avatarURL}}
   } catch (err) {
     return {status: 400, message: {"message": err.message}}
   }
