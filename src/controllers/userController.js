@@ -6,9 +6,6 @@ const {
   updateSubscriptionService,
   updateAvatarService
 } = require('../services/userService')
-const multer = require('multer')
-const upload = multer().single('avatar')
-
 
 const registrationController = async(req, res ) => {
   const {status, message} = await  registrationService(req.body.email, req.body.password)

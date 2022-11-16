@@ -11,7 +11,7 @@ const {
   updateFavoriteFieldController
 } = require('../controllers/contactController')
 
-router.use(authMiddleware)
+// router.use(authMiddleware)
 router.get('/', getAllContactsController)
 router.get('/:id', getByIdContactController)
 router.post('/', addContactMiddleware, addContactController)

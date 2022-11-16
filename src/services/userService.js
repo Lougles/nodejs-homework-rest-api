@@ -6,7 +6,14 @@ const {resize} = require('../helpers/resizeAvatar')
 
 const registrationService = async(email, password) => {
   try {
-    return {status: 200, message: await new User({email, password}).save() }
+    const user =  new User({email, password})
+    const token = jwt.sign({
+      _id: user._id,
+      createdAt: user.createdAt,
+    }, process.env.JWT);
+    user.token = token;
+    await user.save();
+    return {status: 201, message:  user}
   } catch (err) {
     return {status: 400, message: err.message}
   }
@@ -41,7 +48,7 @@ const logoutService = async (user) => {
 
 const currentService = async (user) => {
   try {
-    return {status: 200, message: {"email": user.email, "subscription": user.subscription}}
+    return {status: 200, message: {"email": user.email, "subscription": user.subscription, avatar: user.avatarURL}}
   } catch (err) {
     return {status: 400, message: err.message}
   }

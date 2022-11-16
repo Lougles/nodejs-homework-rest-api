@@ -14,6 +14,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use(express.static('./public'))
+
 app.use('/api/contacts', contactsRouter)
 app.use('/api/users', authRouter)
 
@@ -22,7 +23,7 @@ app.use((req, res) => {
 })
 
 app.use((err, req, res, next) => {
-  res.status(400).json({ message: err.message })
+  res.status(err.status || 500).json({ message: err.message })
 })
 
 module.exports = app

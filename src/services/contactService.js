@@ -25,7 +25,9 @@ const getByIdContactService = async(_id, owner) => {
 const addContactService = async(body, owner) => {
   try {
     const data = await ContactModel.create({...body, owner});
-    return {status: 201, message: {"message": `Contact ${body.name} has beed added:`, data}}
+    console.log(data);
+    return data
+    // return {status: 201, message: {"message": `Contact ${body.name} has beed added:`, data}}
   } catch (e) {
     return {status: 400, message: {"message": e.message}}
   }
