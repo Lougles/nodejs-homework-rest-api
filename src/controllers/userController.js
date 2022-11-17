@@ -13,7 +13,6 @@ const registrationController = async(req, res ) => {
 }
 
 const loginController = async(req, res ) => {
-  console.log(req.body)
   const {status, message} = await  loginService(req.body.email, req.body.password)
   res.status(status).json(message);
 }
@@ -34,7 +33,7 @@ const updateSubscriptionController = async (req, res, next) => {
 }
 
 const updateAvatarController = async (req, res, next) => {
-  const {status, message} = await updateAvatarService(req.body.avatar, req.user);
+  const {status, message} = await updateAvatarService(req.file, req.user);
   res.status(status).json(message);
 }
 

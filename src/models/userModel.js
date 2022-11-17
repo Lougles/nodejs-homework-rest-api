@@ -27,12 +27,12 @@ const Auth = mongoose.Schema({
   avatarURL: {
     type: String,
     default: gravatar.profile_url(this.email)
-  }
+  },
 })
 
 Auth.pre('save', async function() {
   if (this.isNew){
-    this.password =  await bcrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
   }
 })
 
