@@ -14,7 +14,6 @@ const registrationService = async(email, password) => {
 
 const loginService = async(email, password) => {
   try {
-    console.log(email, password)
     const user = await User.findOne({email});
     if(!user) return {status: 404, message: `User is not found`}
     if(!await bcrypt.compare(password, user.password)) return {status: 400, message: `Wrong password`} 
