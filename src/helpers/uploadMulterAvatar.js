@@ -1,7 +1,7 @@
 const { Error } = require('mongoose')
 const multer = require('multer')
 const path = require('path')
-const avatar_dir = path.resolve('uploads')
+const avatar_dir = path.resolve('tmp')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -11,12 +11,11 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+    cb(null, uniqueSuffix + path.extname(file.originalname))
   }
 })
 
 const upload = multer({ storage })
-
 module.exports = {
   upload
 }

@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const {authFieldValidation, subscriptionMiddleware} = require('../middleware/userMiddleware')
 const {authMiddleware} = require('../middleware/authMiddleware')
-const {upload} = require('../helpers/uploadAvatar')
+const {upload} = require('../helpers/uploadMulterAvatar')
 const {
   registrationController,
   loginController,
