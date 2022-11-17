@@ -60,7 +60,6 @@ const updateSubscriptionService = async(subscription, user) => {
 
 const updateAvatarService = async(avatar, user) => {
   try {
-    console.log(avatar)
     const newPath = await avatarManipulate(avatar, user)
     user.avatarURL = newPath;
     await user.save();
