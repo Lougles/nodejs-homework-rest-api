@@ -6,14 +6,14 @@ const {resize} = require('../helpers/resizeAvatar')
 
 const registrationService = async(email, password) => {
   try {
-    const user =  new User({email, password})
-    const token = jwt.sign({
-      _id: user._id,
-      createdAt: user.createdAt,
-    }, process.env.JWT);
-    user.token = token;
-    await user.save();
-    return {status: 201, message:  user}
+    // const user =  new User({email, password})
+    // const token = jwt.sign({
+    //   _id: user._id,
+    //   createdAt: user.createdAt,
+    // }, process.env.JWT);
+    // user.token = token;
+    // await user.save();
+    return {status: 201, message: await new User({email, password}).save()}
   } catch (err) {
     return {status: 400, message: err.message}
   }
