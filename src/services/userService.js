@@ -1,11 +1,12 @@
 const {User} = require('../models/userModel')
 const bcrypt = require('bcrypt')
+const {avatarManipulate} = require('../helpers/avatarJimpManipulation')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 const registrationService = async(email, password) => {
   try {
-    return {status: 200, message: await new User({email, password}).save() }
+    return {status: 201, message: await new User({email, password}).save() }
   } catch (err) {
     return {status: 400, message: err.message}
   }
@@ -50,7 +51,18 @@ const updateSubscriptionService = async(subscription, user) => {
   try {
     user.subscription = subscription;
     await user.save();
-    return {status: 200, message: {message: `${user.email} your subscription has been updated to ${user.subscription}!`, email: user.email, subscription: user.subscription}}
+    return {status: 200, message: {message: `${user.email} your subscription has been updated to ${user.subscription}!`, subscription: user.subscription}}
+  } catch (e) {
+    return {status: 400, message: {"message": e.message}}
+  }
+}
+
+const updateAvatarService = async(avatar, user) => {
+  try {
+    const newPath = await avatarManipulate(avatar, user)
+    user.avatarURL = newPath;
+    await user.save();
+    return {status: 200, message: {message: `${user.email} your avatar has been updated!`, avatar: user.avatarURL}}
   } catch (e) {
     return {status: 400, message: {"message": e.message}}
   }
@@ -61,5 +73,6 @@ module.exports = {
   loginService,
   logoutService,
   currentService,
-  updateSubscriptionService
+  updateSubscriptionService,
+  updateAvatarService
 }
