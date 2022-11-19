@@ -34,8 +34,4 @@ describe('Registration and login test', () => {
     expect(res.statusCode).toEqual(200)
     expect(res.body.token).toBeTruthy()
   })
-
-
-
-
 })
