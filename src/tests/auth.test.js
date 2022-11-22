@@ -11,6 +11,26 @@ beforeAll((done) => {
   mongoose.connect(URL).then(() => done())
 })
 afterAll(() => server.close())
+describe('Registration and login test Errors', () => {
+  test('should return registered error ("email" is required)', async() => {
+    const registrationUser = {
+      password: "password"
+    }
+    const res = await request(app).post('/api/users/registration').send(registrationUser)
+    expect(res.statusCode).toEqual(400)
+    expect(res.ok).toEqual(false)
+    expect(res.body.message).toEqual('"email" is required')
+  })
+  test('should return registered error ("password" is required)', async() => {
+    const registrationUser = {
+      email: "Vova@gmail.com"
+    }
+    const res = await request(app).post('/api/users/registration').send(registrationUser)
+    expect(res.statusCode).toEqual(400)
+    expect(res.ok).toEqual(false)
+    expect(res.body.message).toEqual('"password" is required')
+  })
+})
 
 describe('Registration and login test', () => {
   test('should return registered user', async() => {
@@ -20,11 +40,32 @@ describe('Registration and login test', () => {
     }
     const res = await request(app).post('/api/users/registration').send(registrationUser)
     expect(res.error).toBe(false)
+    expect(res.ok).toBe(true)
     expect(res.statusCode).toEqual(201)
     expect(res.body.email).toEqual(registrationUser.email)
     expect(res.body.avatarURL).toBeDefined()
     expect(res.body.password).toBeDefined()
     expect(res.body.subscription).toEqual('starter')
+  })
+  test('should return wrong password error', async() => {
+    const loginUser = {
+      email: "Vova@gmail.com",
+      password: "wrongPassword"
+    }
+    const res = await request(app).post('/api/users/login').send(loginUser)
+    expect(res.statusCode).toEqual(400)
+    expect(res.body).toEqual('Wrong password')
+    expect(res.ok).toEqual(false)
+  })
+  test('should return wrong password length error', async() => {
+    const loginUser = {
+      email: "Vova@gmail.com",
+      password: "len"
+    }
+    const res = await request(app).post('/api/users/login').send(loginUser)
+    expect(res.statusCode).toEqual(400)
+    expect(res.ok).toEqual(false)
+    expect(res.body.message).toEqual('"password" length must be at least 6 characters long')
   })
   test('should return token', async () => {
     const loginUser = {
@@ -99,7 +140,6 @@ describe('CRUD contacts tests', () => {
   })
   test('should return an deleted contact', async() => {
     const res = await request(app).delete(`/api/contacts/${id}`).set('Authorization', `Bearer ${token}`)
-    console.log(res)
     expect(res.error).toBe(false)
     expect(res.statusCode).toEqual(200)
   })
