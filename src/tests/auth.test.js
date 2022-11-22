@@ -11,6 +11,7 @@ beforeAll((done) => {
   mongoose.connect(URL).then(() => done())
 })
 afterAll(() => server.close())
+
 describe('Registration and login test Errors', () => {
   test('should return registered error ("email" is required)', async() => {
     const registrationUser = {
@@ -39,8 +40,8 @@ describe('Registration and login test', () => {
       password: "password"
     }
     const res = await request(app).post('/api/users/registration').send(registrationUser)
-    expect(res.error).toBe(false)
-    expect(res.ok).toBe(true)
+    expect(res.error).toEqual(false)
+    expect(res.ok).toEqual(true)
     expect(res.statusCode).toEqual(201)
     expect(res.body.email).toEqual(registrationUser.email)
     expect(res.body.avatarURL).toBeDefined()
@@ -67,6 +68,16 @@ describe('Registration and login test', () => {
     expect(res.ok).toEqual(false)
     expect(res.body.message).toEqual('"password" length must be at least 6 characters long')
   })
+  test('should return "User is not found" error', async () => {
+    const loginUser = {
+      email: "WrongUser@gmail.com",
+      password: "password"
+    }
+    const res = await request(app).post('/api/users/login').send(loginUser)
+    expect(res.statusCode).toEqual(404)
+    expect(res.ok).toEqual(false)
+    expect(res.body).toEqual('User is not found')
+  })
   test('should return token', async () => {
     const loginUser = {
       email: "Vova@gmail.com",
@@ -81,7 +92,20 @@ describe('Registration and login test', () => {
   })
 })
 
-describe('CRUD contacts tests', () => {
+describe('CRUD contacts test errors', () => {
+  test('should return error', async() => {
+    const newContact = {
+      name: "test",
+      phone: "0123456789"
+    }
+    const res = await request(app).post('/api/contacts/').send(newContact).set('Authorization', `Bearer ${token}`)
+    expect(res.statusCode).toEqual(400)
+    expect(res.ok).toEqual(false)
+    expect(res.body.message).toEqual('"email" is required')
+  })
+})
+
+describe('CRUD contacts test', () => {
   afterAll( async() => {
     await mongoose.connection.db.collection('users').deleteMany({})
     await mongoose.connection.db.collection('contacts').deleteMany({})
