@@ -2,12 +2,12 @@ const nodemailer = require("nodemailer");
 require('dotenv').config()
 
 
-const sendMail = async(email, subject, text, hash) => {
+const sendMail = async(email, hash) => {
   const msg = {
     from: 'louglescom@gmail.com',
     to: email,
-    subject: subject,
-    text: `${text}/${hash}`
+    subject: 'Registration confirmation',
+    text: `To confirm your registration click to link http://localhost:4040/api/users/verify/${hash}`
   }
   nodemailer.createTransport({
     service: 'gmail',
@@ -27,7 +27,7 @@ const sendMail = async(email, subject, text, hash) => {
 }
 
 
-sendMail('chelidze.v.a@icloud.com', 'Registration confirmation', 'To finish registration move to http:4040/api/contacts/user/verify', 'qwertyu')
+// sendMail('chelidze.v.a@icloud.com', 'Registration confirmation', 'To finish registration move to http:4040/api/contacts/user/verify', 'qwertyu')
 
 
  module.exports = {

@@ -3,19 +3,30 @@ const bcrypt = require('bcrypt')
 const {avatarManipulate} = require('../helpers/avatarJimpManipulation')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const {sendMail} = require('../helpers/nodemailer')
+const { v4: uuidv4 } = require('uuid');
 
 const verificationTokenService = async(verificationToken) => {
-  const user = await User.findOne({verificationToken})
-  if(!user) return {status: 404, message: "User not found"}
-  user.verificationToken = null;
-  user.verify = true;
-  await user.save()
-  return {status: 200, message: 'Verification successful'}
+  try {
+    const user = await User.findOne({verificationToken})
+    if(!user) return {status: 404, message: "User not found"}
+    user.verificationToken = ' ';
+    user.verify = true;
+    await user.save()
+    return {status: 200, message: 'Verification successful'}
+  } catch (err) {
+    return {status: 400, message: err.message}
+  }
 }
 
 const registrationService = async(email, password) => {
   try {
-    return {status: 201, message: await new User({email, password}).save() }
+    const user = new User({email, password})
+    const verifyToken = email + uuidv4()
+    user.verificationToken = verifyToken
+    user.save();
+    await sendMail(email, verifyToken)
+    return {status: 201, message: user }
   } catch (err) {
     return {status: 400, message: err.message}
   }
@@ -23,7 +34,7 @@ const registrationService = async(email, password) => {
 
 const loginService = async(email, password) => {
   try {
-    const user = await User.findOne({email});
+    const user = await User.findOne({email, verify: true});
     if(!user) return {status: 404, message: `User is not found`}
     if(!await bcrypt.compare(password, user.password)) return {status: 400, message: `Wrong password`} 
     const token = jwt.sign({
