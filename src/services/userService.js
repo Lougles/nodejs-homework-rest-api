@@ -4,6 +4,10 @@ const {avatarManipulate} = require('../helpers/avatarJimpManipulation')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
+const verificationTokenService = async(verificationToken) => {
+  return {status: 200, message: verificationToken}
+}
+
 const registrationService = async(email, password) => {
   try {
     return {status: 201, message: await new User({email, password}).save() }
@@ -69,6 +73,7 @@ const updateAvatarService = async(avatar, user) => {
 }
 
 module.exports = {
+  verificationTokenService,
   registrationService,
   loginService,
   logoutService,

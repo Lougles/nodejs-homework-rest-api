@@ -4,6 +4,7 @@ const {authFieldValidation, subscriptionMiddleware} = require('../middleware/use
 const {authMiddleware} = require('../middleware/authMiddleware')
 const {upload} = require('../helpers/uploadMulterAvatar')
 const {
+  verificationTokenController,
   registrationController,
   loginController,
   logoutController,
@@ -12,6 +13,7 @@ const {
   updateAvatarController
 } = require('../controllers/userController')
 
+router.get('/verify/:verificationToken', verificationTokenController)
 router.post('/registration', authFieldValidation, registrationController)
 router.post('/login', authFieldValidation, loginController)
 router.post('/logout', authMiddleware, logoutController)
