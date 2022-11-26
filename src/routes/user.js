@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {authFieldValidation, subscriptionMiddleware} = require('../middleware/userMiddleware')
+const {authFieldValidation, subscriptionMiddleware, verifyMiddleware} = require('../middleware/userMiddleware')
 const {authMiddleware} = require('../middleware/authMiddleware')
 const {upload} = require('../helpers/uploadMulterAvatar')
 const {
@@ -15,7 +15,7 @@ const {
 } = require('../controllers/userController')
 
 router.get('/verify/:verificationToken', verificationTokenController)
-router.post('/verify', verifyController)
+router.post('/verify', verifyMiddleware, verifyController)
 router.post('/registration', authFieldValidation, registrationController)
 router.post('/login', authFieldValidation, loginController)
 router.post('/logout', authMiddleware, logoutController)

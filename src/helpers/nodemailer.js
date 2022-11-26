@@ -22,13 +22,9 @@ const sendMail = async(email, hash) => {
     if(err){
       return console.log('Error', err)
     }
-    return console.log("Email sent")
   })
+  return `Verification email sent`
 }
-
-
-// sendMail('chelidze.v.a@icloud.com', 'Registration confirmation', 'To finish registration move to http:4040/api/contacts/user/verify', 'qwertyu')
-
 
  module.exports = {
   sendMail
