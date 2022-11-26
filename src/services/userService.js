@@ -5,7 +5,12 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken')
 
 const verificationTokenService = async(verificationToken) => {
-  return {status: 200, message: verificationToken}
+  const user = await User.findOne({verificationToken})
+  if(!user) return {status: 404, message: "User not found"}
+  user.verificationToken = null;
+  user.verify = true;
+  await user.save()
+  return {status: 200, message: 'Verification successful'}
 }
 
 const registrationService = async(email, password) => {
