@@ -1,5 +1,6 @@
 const {
   verificationTokenService,
+  verifyService,
   registrationService,
   loginService,
   logoutService,
@@ -9,8 +10,12 @@ const {
 } = require('../services/userService')
 
 const verificationTokenController = async(req, res) => {
-  // console.log(req.params.verificationToken)
   const {status, message} = await  verificationTokenService(req.params.verificationToken)
+  res.status(status).json(message);
+}
+
+const verifyController = async(req, res) => {
+  const {status, message} = await  verifyService(req.body.email)
   res.status(status).json(message);
 }
 
@@ -46,6 +51,7 @@ const updateAvatarController = async (req, res, next) => {
 
 module.exports = {
   verificationTokenController,
+  verifyController,
   registrationController,
   loginController,
   logoutController,

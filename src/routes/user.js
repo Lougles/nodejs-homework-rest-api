@@ -5,6 +5,7 @@ const {authMiddleware} = require('../middleware/authMiddleware')
 const {upload} = require('../helpers/uploadMulterAvatar')
 const {
   verificationTokenController,
+  verifyController,
   registrationController,
   loginController,
   logoutController,
@@ -14,6 +15,7 @@ const {
 } = require('../controllers/userController')
 
 router.get('/verify/:verificationToken', verificationTokenController)
+router.post('/verify', verifyController)
 router.post('/registration', authFieldValidation, registrationController)
 router.post('/login', authFieldValidation, loginController)
 router.post('/logout', authMiddleware, logoutController)

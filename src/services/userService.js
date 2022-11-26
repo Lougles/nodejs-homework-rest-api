@@ -19,6 +19,14 @@ const verificationTokenService = async(verificationToken) => {
   }
 }
 
+const verifyService = async(email) => {
+  try {
+    
+  } catch (err) {
+    return {status: 400, message: err.message}
+  }
+}
+
 const registrationService = async(email, password) => {
   try {
     const user = new User({email, password})
@@ -90,6 +98,7 @@ const updateAvatarService = async(avatar, user) => {
 
 module.exports = {
   verificationTokenService,
+  verifyService,
   registrationService,
   loginService,
   logoutService,

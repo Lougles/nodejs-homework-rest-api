@@ -10,7 +10,12 @@ const subscriptionContact = Joi.object({
   subscription: Joi.string().valid(...subscribe).required(),
 })
 
+const verify = Joi.object({
+  email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+})
+
 module.exports = {
   authValidation,
-  subscriptionContact
+  subscriptionContact,
+  verify
 }
