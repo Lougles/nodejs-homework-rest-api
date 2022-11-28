@@ -5,7 +5,7 @@ const authMiddleware = async(req, res, next) => {
   try {
     const {authorization} = req.headers;
     if(!authorization) return res.status(401).json({message: "Unauthorized!"})
-    const [, token] = req.headers.authorization?.split(' ')
+    const [, token] = req.headers.authorization.split(' ')
     if(!token) return res.status(401).json({message: "Unauthorized!"})
     const tokenDecode = jwt.decode(token, process.env.JWT);
     const user = await User.findById(tokenDecode._id);
