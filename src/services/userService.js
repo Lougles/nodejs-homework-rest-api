@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const {sendMail} = require('../helpers/nodemailer')
 const { v4: uuidv4 } = require('uuid');
 
+
 const verificationTokenService = async(verificationToken) => {
   try {
     const user = await User.findOne({verificationToken})
@@ -23,8 +24,8 @@ const verifyService = async(email) => {
   try {
     const user = await User.findOne({email, verify: false})
     if(!user) return {status: 404, message: {"message": "User not found"}}
-    const message = await sendMail(user.email, user.verificationToken)
-    return {status: 200, message: {"message": message}}
+    await sendMail(user.email, user.verificationToken)
+    return {status: 200, message: {"message": 'Email re-sent'}}
   } catch (e) {
     return {status: 400, message: {"message": e.message}}
   }
