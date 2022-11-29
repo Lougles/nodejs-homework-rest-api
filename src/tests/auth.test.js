@@ -4,7 +4,7 @@ require('dotenv').config()
 const app = require('../../app')
 const testCollection = '/test'
 const URL = process.env.URL + testCollection
-let server, token = '', id;
+let server, token = '', id, verifyToken
 
 beforeAll((done) => {
   server = app.listen(process.env.AUTH_PORT_TEST)
@@ -24,7 +24,7 @@ describe('Registration and login test Errors', () => {
   })
   test('should return registered error ("password" is required)', async() => {
     const registrationUser = {
-      email: "Vova@gmail.com"
+      email: "chelidze.v.a@icloud.com"
     }
     const res = await request(app).post('/api/users/registration').send(registrationUser)
     expect(res.statusCode).toEqual(400)
@@ -33,67 +33,91 @@ describe('Registration and login test Errors', () => {
   })
 })
 
-describe('Registration and login test', () => {
-  test('should return registered user', async() => {
+
+describe('Registration and login tests', () => {
+
+
+
+  test('should return registered verificationToken', async() => {
     const registrationUser = {
-      email: "Vova@gmail.com",
+      email: "chelidze.v.a@icloud.com",
       password: "password"
     }
     const res = await request(app).post('/api/users/registration').send(registrationUser)
+    verifyToken = res.body.user.verificationToken
     expect(res.error).toEqual(false)
     expect(res.ok).toEqual(true)
     expect(res.statusCode).toEqual(201)
-    expect(res.body.email).toEqual(registrationUser.email)
-    expect(res.body.avatarURL).toBeDefined()
-    expect(res.body.password).toBeDefined()
-    expect(res.body.subscription).toEqual('starter')
+    expect(res.body.user.email).toEqual(registrationUser.email)
+    expect(res.body.user.subscription).toEqual('starter')
+    expect(res.body.user.avatarURL).toBeDefined()
+    expect(res.body.user.password).toBeDefined()
+    expect(res.body.user.verify).toEqual(false)
+    expect(res.body.user.verificationToken).toBeDefined()
+  })
+
+  test('should return re-send email verification', async() => {
+    const user = {
+      email: 'chelidze.v.a@icloud.com'
+    }
+    const res = await request(app).post('/api/users/verify').send(user)
+    expect(res.error).toEqual(false)
+    expect(res.ok).toEqual(true)
+    expect(res.body.message).toEqual('Email re-sent')
+    
+  })
+  test('shoud return verification', async() => {
+    const res = await request(app).get(`/api/users/verify/${verifyToken}`)
+    expect(res.error).toEqual(false)
+    expect(res.ok).toEqual(true)
+    expect(res.body.message).toEqual('Verification successful')
   })
   test('should return wrong password error', async() => {
-    const loginUser = {
-      email: "Vova@gmail.com",
-      password: "wrongPassword"
-    }
-    const res = await request(app).post('/api/users/login').send(loginUser)
-    expect(res.statusCode).toEqual(400)
-    expect(res.body).toEqual('Wrong password')
-    expect(res.ok).toEqual(false)
+  const loginUser = {
+    email: "chelidze.v.a@icloud.com",
+    password: "wrongPassword"
+  }
+  const res = await request(app).post('/api/users/login').send(loginUser)
+  expect(res.statusCode).toEqual(400)
+  expect(res.body.message).toEqual('Wrong password')
+  expect(res.ok).toEqual(false)
   })
   test('should return wrong password length error', async() => {
-    const loginUser = {
-      email: "Vova@gmail.com",
-      password: "len"
-    }
-    const res = await request(app).post('/api/users/login').send(loginUser)
-    expect(res.statusCode).toEqual(400)
-    expect(res.ok).toEqual(false)
-    expect(res.body.message).toEqual('"password" length must be at least 6 characters long')
+  const loginUser = {
+    email: "chelidze.v.a@icloud.com",
+    password: "len"
+  }
+  const res = await request(app).post('/api/users/login').send(loginUser)
+  expect(res.statusCode).toEqual(400)
+  expect(res.ok).toEqual(false)
+  expect(res.body.message).toEqual('"password" length must be at least 6 characters long')
   })
   test('should return "User is not found" error', async () => {
-    const loginUser = {
-      email: "WrongUser@gmail.com",
-      password: "password"
-    }
-    const res = await request(app).post('/api/users/login').send(loginUser)
-    expect(res.statusCode).toEqual(404)
-    expect(res.ok).toEqual(false)
-    expect(res.body).toEqual('User is not found')
+  const loginUser = {
+    email: "wrongUser@icloud.com",
+    password: "password"
+  }
+  const res = await request(app).post('/api/users/login').send(loginUser)
+  expect(res.statusCode).toEqual(404)
+  expect(res.ok).toEqual(false)
+  expect(res.body.message).toEqual('User is not found')
   })
   test('should return token', async () => {
-    const loginUser = {
-      email: "Vova@gmail.com",
-      password: "password"
-    }
-    const res = await request(app).post('/api/users/login').send(loginUser)
-    token = res.body.token
-    expect(res.error).toBe(false)
-    expect(res.statusCode).toEqual(200)
-    expect(res.body.token).toBeDefined()
-    expect(res.body.token).toBeTruthy()
+  const loginUser = {
+    email: "chelidze.v.a@icloud.com",
+    password: "password"
+  }
+  const res = await request(app).post('/api/users/login').send(loginUser)
+  token = res.body.token
+  expect(res.error).toBe(false)
+  expect(res.statusCode).toEqual(200)
+  expect(res.body.token).toBeDefined()
+  expect(res.body.token).toBeTruthy()
   })
 })
 
 describe('CRUD contacts test errors', () => {
-  test('should return error', async() => {
+  test('should return error (email is required) ', async() => {
     const newContact = {
       name: "test",
       phone: "0123456789"
@@ -105,11 +129,8 @@ describe('CRUD contacts test errors', () => {
   })
 })
 
+
 describe('CRUD contacts test', () => {
-  afterAll( async() => {
-    await mongoose.connection.db.collection('users').deleteMany({})
-    await mongoose.connection.db.collection('contacts').deleteMany({})
-  })
   test('should return added contact', async() => {
     const newContact = {
       email: "test@gmail.com",
@@ -166,5 +187,9 @@ describe('CRUD contacts test', () => {
     const res = await request(app).delete(`/api/contacts/${id}`).set('Authorization', `Bearer ${token}`)
     expect(res.error).toBe(false)
     expect(res.statusCode).toEqual(200)
+  })
+  afterAll( async() => {
+    await mongoose.connection.db.collection('users').deleteMany({})
+    await mongoose.connection.db.collection('contacts').deleteMany({})
   })
 })
