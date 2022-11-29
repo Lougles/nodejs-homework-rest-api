@@ -1,4 +1,6 @@
 const {
+  verificationTokenService,
+  verifyService,
   registrationService,
   loginService,
   logoutService,
@@ -6,6 +8,16 @@ const {
   updateSubscriptionService,
   updateAvatarService
 } = require('../services/userService')
+
+const verificationTokenController = async(req, res) => {
+  const {status, message} = await  verificationTokenService(req.params.verificationToken)
+  res.status(status).json(message);
+}
+
+const verifyController = async(req, res) => {
+  const {status, message} = await  verifyService(req.body.email)
+  res.status(status).json(message);
+}
 
 const registrationController = async(req, res ) => {
   const {status, message} = await  registrationService(req.body.email, req.body.password)
@@ -38,6 +50,8 @@ const updateAvatarController = async (req, res, next) => {
 }
 
 module.exports = {
+  verificationTokenController,
+  verifyController,
   registrationController,
   loginController,
   logoutController,

@@ -28,6 +28,14 @@ const Auth = mongoose.Schema({
     type: String,
     default: gravatar.profile_url(this.email)
   },
+  verify: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: {
+    type: String,
+    required: [true, 'Verify token is required'],
+  }
 })
 
 Auth.pre('save', async function() {
